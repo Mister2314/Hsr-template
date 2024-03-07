@@ -4,10 +4,8 @@ document.addEventListener("DOMContentLoaded", function () {
     var volumeBtn = document.querySelector(".volume-share .left-pg");
     var music = document.getElementById("backgroundMusic");
 
-    // Müziği başlangıçta durdur
     music.pause();
 
-    // Video durdurma/başlatma düğmesi
     playPauseVideoBtn.addEventListener("change", function () {
         if (playPauseVideoBtn.checked) {
             video.play();
@@ -16,7 +14,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Ses açma/kapama düğmesi
     volumeBtn.addEventListener("click", function () {
         var onImg = volumeBtn.querySelector(".on");
         var offImg = volumeBtn.querySelector(".off");
@@ -26,13 +23,13 @@ document.addEventListener("DOMContentLoaded", function () {
             offImg.style.display = "none";
             music.muted = false;
             localStorage.setItem("muteStatus", "unmuted");
-            music.play(); // Müziği başlat
+            music.play();
         } else {
             onImg.style.display = "none";
             offImg.style.display = "block";
             music.muted = true;
             localStorage.setItem("muteStatus", "muted");
-            music.pause(); // Müziği durdur
+            music.pause();
         }
     });
 });
