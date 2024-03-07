@@ -4,6 +4,9 @@ document.addEventListener("DOMContentLoaded", function () {
     var volumeBtn = document.querySelector(".volume-share .left-pg");
     var music = document.getElementById("backgroundMusic");
 
+    // İlk başta müziği açık bırakalım
+    music.muted = false;
+
     if (localStorage.getItem("muteStatus") === "muted") {
         video.muted = true;
         document.querySelector(".volume-share .on").style.display = "none";
@@ -25,12 +28,12 @@ document.addEventListener("DOMContentLoaded", function () {
         if (onImg.style.display === "none") {
             onImg.style.display = "block";
             offImg.style.display = "none";
-            music.muted = false;
+            music.muted = false; // Müziği açık hale getir
             localStorage.setItem("muteStatus", "unmuted");
         } else {
             onImg.style.display = "none";
             offImg.style.display = "block";
-            music.muted = true;
+            music.muted = true; // Müziği kapat
             localStorage.setItem("muteStatus", "muted");
         }
     });
