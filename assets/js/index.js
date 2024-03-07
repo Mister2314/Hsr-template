@@ -4,23 +4,10 @@ document.addEventListener("DOMContentLoaded", function () {
     var volumeBtn = document.querySelector(".volume-share .left-pg");
     var music = document.getElementById("backgroundMusic");
 
-    // İlk başta müziği açık bırakalım
-    music.muted = false;
+    // Müziği otomatik olarak başlat
+    music.play();
 
-    if (localStorage.getItem("muteStatus") === "muted") {
-        video.muted = true;
-        document.querySelector(".volume-share .on").style.display = "none";
-        document.querySelector(".volume-share .off").style.display = "block";
-    }
-
-    playPauseVideoBtn.addEventListener("change", function () {
-        if (playPauseVideoBtn.checked) {
-            video.play();
-        } else {
-            video.pause();
-        }
-    });
-
+    // Ses açma/kapatma düğmesine basıldığında müziği kontrol et
     volumeBtn.addEventListener("click", function () {
         var onImg = volumeBtn.querySelector(".on");
         var offImg = volumeBtn.querySelector(".off");
@@ -28,15 +15,16 @@ document.addEventListener("DOMContentLoaded", function () {
         if (onImg.style.display === "none") {
             onImg.style.display = "block";
             offImg.style.display = "none";
-            music.muted = false; // Müziği açık hale getir
-            localStorage.setItem("muteStatus", "unmuted");
+            music.muted = false; // Müziği aç
         } else {
             onImg.style.display = "none";
             offImg.style.display = "block";
             music.muted = true; // Müziği kapat
-            localStorage.setItem("muteStatus", "muted");
         }
     });
-});
 
-music.play();
+    // Sayfa yenilendiğinde müziği tekrar başlat
+    window.addEventListener("load", function() {
+        music.play();
+    });
+});
