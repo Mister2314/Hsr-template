@@ -3,13 +3,13 @@
 <p align="center"><b>A cinematic game landing page with a video hero, character carousel, soundtrack toggle and platform download CTAs.</b></p>
 
 <p align="center">
-[![Live Demo](https://img.shields.io/badge/Live_Demo-▶-2ea44f?style=for-the-badge&logo=vercel&logoColor=white)](https://mister2314.github.io/Hsr-template/)
-![HTML5](https://img.shields.io/badge/HTML5-e34f26?style=flat-square&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572b6?style=flat-square&logoColor=white)
-![Swiper](https://img.shields.io/badge/Swiper-6332f6?style=flat-square&logoColor=white)
+<a href="https://mister2314.github.io/Hsr-template/"><img src="https://img.shields.io/badge/Live_Demo-2ea44f?style=flat-square&logo=vercel&logoColor=white" alt="Live demo" height="28"></a>
+<img src="https://img.shields.io/badge/HTML5-e34f26?style=flat-square" alt="HTML5" height="20">
+<img src="https://img.shields.io/badge/CSS3-1572b6?style=flat-square" alt="CSS3" height="20">
+<img src="https://img.shields.io/badge/Swiper-6332f6?style=flat-square" alt="Swiper" height="20">
 </p>
 
-<p align="center">[**Live demo**](https://mister2314.github.io/Hsr-template/) · [Quick start](#quick-start) · [Features](#features) · [Architecture](#architecture) · [FAQ](#faq)</p>
+<p align="center"><a href="https://mister2314.github.io/Hsr-template/"><b>Live demo</b></a> &nbsp;·&nbsp; <a href="#quick-start">Quick start</a> &nbsp;·&nbsp; <a href="#features">Features</a> &nbsp;·&nbsp; <a href="#architecture">Architecture</a> &nbsp;·&nbsp; <a href="#faq">FAQ</a></p>
 
 <p align="center">
   <a href="https://mister2314.github.io/Hsr-template/">
@@ -89,6 +89,35 @@ assets/css/style.css — layout, overlays and carousel styling
 assets/js/index.js — Swiper init, audio toggle, video handling
 assets/video/, assets/music/, assets/img/ — media assets
 ```
+
+## FAQ
+
+<details>
+<summary><b>Where does the background video come from?</b></summary>
+
+A local `.mp4` in `assets/video/`. It is muted and autoplaying, which is the only way a browser will let it start without a user gesture.
+
+</details>
+
+<details>
+<summary><b>How is the text readable over moving footage?</b></summary>
+
+Layered gradient and blur overlays sit between the video and the copy. Without them the headline disappears whenever the footage goes bright.
+
+</details>
+
+<details>
+<summary><b>How does the soundtrack toggle work?</b></summary>
+
+An `<audio>` element with on/off state, driven by one click handler. It starts muted and only plays after an explicit click — browsers block autoplaying audio.
+
+</details>
+
+## Roadmap
+
+- [ ] Replace the video with a compressed WebM
+- [ ] Pause the video when the tab is hidden
+- [ ] Add a poster frame for slow connections
 
 ## Author
 
