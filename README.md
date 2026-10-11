@@ -1,23 +1,38 @@
-# Star Rail — Game Landing Page
+<h1 align="center">Star Rail — Game Landing Page</h1>
 
-**A cinematic game landing page with a video hero, character carousel, soundtrack toggle and platform download CTAs.**
+<p align="center"><b>A cinematic game landing page with a video hero, character carousel, soundtrack toggle and platform download CTAs.</b></p>
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-mister2314.github.io/Hsr--template-2ea44f?style=flat-square&logo=vercel&logoColor=white)](https://mister2314.github.io/Hsr-template/)
+<p align="center">
+[![Live Demo](https://img.shields.io/badge/Live_Demo-▶-2ea44f?style=for-the-badge&logo=vercel&logoColor=white)](https://mister2314.github.io/Hsr-template/)
 ![HTML5](https://img.shields.io/badge/HTML5-e34f26?style=flat-square&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572b6?style=flat-square&logoColor=white)
 ![Swiper](https://img.shields.io/badge/Swiper-6332f6?style=flat-square&logoColor=white)
+</p>
+
+<p align="center">[**Live demo**](https://mister2314.github.io/Hsr-template/) · [Quick start](#quick-start) · [Features](#features) · [Architecture](#architecture) · [FAQ](#faq)</p>
 
 <p align="center">
   <a href="https://mister2314.github.io/Hsr-template/">
-    <img src="docs/preview.png" alt="Star Rail — Game Landing Page — desktop preview" width="100%">
+    <img src="docs/demo.gif" alt="Star Rail — Game Landing Page — animated demo" width="88%">
   </a>
 </p>
+
+<p align="center"><sub>Live capture of the real build — 2575 KB, loops forever.</sub></p>
 
 ## Overview
 
 A landing page for a space-fantasy game, built around motion and atmosphere. A muted video fills the hero, characters rotate through a Swiper carousel, and a small audio control lets the visitor toggle the soundtrack on and off without leaving the page.
 
 The build leans on layered backgrounds, gradient overlays and blur to keep text readable over moving footage — the part of this kind of page that is easy to get wrong.
+
+## At a glance
+
+| Field | Detail |
+| --- | --- |
+| **Type** | Static site — no build step |
+| **Primary language** | CSS |
+| **Live demo** | [mister2314.github.io/Hsr-template](https://mister2314.github.io/Hsr-template/) |
+| **Repository** | [Mister2314/Hsr-template](https://github.com/Mister2314/Hsr-template) |
 
 ## Features
 
@@ -39,25 +54,30 @@ The build leans on layered backgrounds, gradient overlays and blur to keep text 
 | Icons | Font Awesome 6 |
 | Deploy | GitHub Pages |
 
+## Architecture
+
+```mermaid
+flowchart LR
+  A["Browser"] --> B["Markup<br/>HTML5 (video"] --> C["Styling<br/>CSS3"] --> D["Carousel<br/>Swiper 11"] --> E["Icons<br/>Font Awesome 6"] --> F["Deploy"]
+```
+
 ## Screenshots
 
 | Desktop | Mobile |
 | :---: | :---: |
 | <img src="docs/preview.png" alt="Desktop view"> | <img src="docs/preview-mobile.png" alt="Mobile view" width="230"> |
 
-## Getting Started
-
-No build step and no dependencies — clone the repo and open the entry file, or serve the folder locally:
+## Quick Start
 
 ```bash
 git clone https://github.com/Mister2314/Hsr-template.git
 cd Hsr-template
 
-# Option 1 — open it directly
+# open it directly
 start index.html      # Windows
 open  index.html      # macOS
 
-# Option 2 — serve it locally
+# or serve the folder
 npx serve .
 ```
 
