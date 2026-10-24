@@ -4,15 +4,24 @@ Game landing page for Honkai: Star Rail — video hero, character carousel, soun
 
 **Live demo:** <https://hsr-template.vercel.app/>
 
-<p align="center">
 <div align="center">
+
+<img src="docs/demo.gif" alt="Hsr-template — animated demo" width="700">
 
 | Desktop | Mobile |
 |---|---|
 | <img src="docs/shot-desktop.png" alt="Desktop view" width="700"> | <img src="docs/shot-mobile.png" alt="Mobile view" width="290"> |
 
+<details>
+<summary>More screenshots</summary>
+
+| Desktop | Mobile |
+|---|---|
+| <img src="docs/preview.png" alt="Desktop, alternate view" width="700"> | <img src="docs/preview-mobile.png" alt="Mobile, alternate view" width="290"> |
+
+</details>
+
 </div>
-</p>
 
 ## What it does
 
