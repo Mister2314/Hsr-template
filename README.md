@@ -1,8 +1,8 @@
-﻿# Hsr-template
+# Hsr-template
 
 Game landing page for Honkai: Star Rail — video hero, character carousel, soundtrack toggle and platform download links.
 
-**Live demo:** <https://mister2314.github.io/Hsr-template/>
+**Live demo:** <https://hsr-template.vercel.app/>
 
 <p align="center">
 <div align="center">
@@ -20,7 +20,7 @@ Reproduces a AAA-game storefront hero: a muted, autoplaying MP4 fills the screen
 
 ## Tech stack
 
-HTML5 · CSS3 · Swiper 11 · Font Awesome 6
+React 19 · TypeScript · Vite
 
 ## Features
 
