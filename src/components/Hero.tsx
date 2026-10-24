@@ -1,11 +1,48 @@
 import { useEffect, useRef, useState } from "react";
 
+const prefersReducedMotion = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const PLATFORMS = [
+  {
+    name: "PlayStation 5",
+    img: "/assets/img/ps5.png",
+    href: "https://www.playstation.com/games/honkai-star-rail",
+    className: "ps5",
+  },
+  {
+    name: "App Store",
+    img: "/assets/img/app-store.png",
+    href: "https://apps.apple.com/us/app/honkai-star-rail/id1599719154",
+    className: "app-store",
+  },
+  {
+    name: "Windows",
+    img: "/assets/img/windows.png",
+    href: "https://sg-public-api.hoyoverse.com/event/download_porter/trace/hkrpg_global/oswebpc/default?url=https%3A%2F%2Fhsr.hoyoverse.com%2Fen-us%2Fhome",
+    className: "windows",
+  },
+  {
+    name: "Google Play",
+    img: "/assets/img/google-play.png",
+    href: "https://play.google.com/store/apps/details?id=com.HoYoverse.hkrpgoversea",
+    className: "google-play",
+  },
+  {
+    name: "Epic Games Store",
+    img: "/assets/img/epic-store.png",
+    href: "https://store.epicgames.com/en-US/p/honkai-star-rail",
+    className: "epic-store",
+  },
+];
+
 export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const musicRef = useRef<HTMLAudioElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const [playing, setPlaying] = useState(true);
-  // Original CSS shows the muted (off) icon first; the soundtrack only
-  // unlocks after the first click, exactly like the vanilla version.
+  const playingRef = useRef(true);
   const [soundOn, setSoundOn] = useState(false);
   const initialized = useRef(false);
 
@@ -13,39 +50,75 @@ export default function Hero() {
     if (initialized.current) return;
     initialized.current = true;
     if (localStorage.getItem("muteStatus") === "muted") {
-      musicRef.current!.muted = true;
+      if (musicRef.current) musicRef.current.muted = true;
     }
-    videoRef.current?.play();
+    const video = videoRef.current;
+    // Poster-first: only autonomous motion on desktop-class viewports,
+    // with animation allowed. Mobile keeps the composed poster still.
+    const mayAutoplay =
+      window.matchMedia("(min-width: 768px)").matches && !prefersReducedMotion();
+    if (mayAutoplay) {
+      video?.play().catch(() => setPlaying(false));
+    } else {
+      setPlaying(false);
+      playingRef.current = false;
+    }
+    // Intersection-aware playback: pause whenever the hero scrolls offscreen,
+    // resume on return if the user had it playing.
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        const video = videoRef.current;
+        if (!video) return;
+        if (!entry.isIntersecting) {
+          if (!video.paused) video.pause();
+        } else if (playingRef.current && video.paused) {
+          video.play().catch(() => setPlaying(false));
+        }
+      },
+      { threshold: 0.5 },
+    );
+    if (sectionRef.current) io.observe(sectionRef.current);
+    return () => io.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toggleVideo = () => {
     const next = !playing;
     setPlaying(next);
-    if (next) {
-      videoRef.current?.play();
-    } else {
-      videoRef.current?.pause();
-    }
+    playingRef.current = next;
+    const video = videoRef.current;
+    if (!video) return;
+    if (next) video.play().catch(() => setPlaying(false));
+    else video.pause();
   };
 
   const toggleSound = () => {
     const next = !soundOn;
     setSoundOn(next);
     const music = musicRef.current;
+    if (!music) return;
     if (next) {
-      if (music) music.muted = false;
+      music.muted = false;
+      void music.play();
       localStorage.setItem("muteStatus", "unmuted");
-      music?.play();
     } else {
-      if (music) music.muted = true;
+      music.muted = true;
+      music.pause();
       localStorage.setItem("muteStatus", "muted");
-      music?.pause();
     }
   };
 
   return (
-    <section className="hero-section">
-      <video id="heroVideo" ref={videoRef} autoPlay loop muted playsInline>
+    <section className="hero-section" ref={sectionRef} aria-label="Honkai: Star Rail">
+      <video
+        id="heroVideo"
+        ref={videoRef}
+        loop
+        muted
+        playsInline
+        preload="metadata"
+        poster="/assets/img/hero-poster.jpg"
+      >
         <source
           src="/assets/video/f54aaca7603e2c81de7f59f2ba27ace5_1530189916137544025.mp4"
           type="video/mp4"
@@ -55,23 +128,20 @@ export default function Hero() {
         <source src="/assets/music/Star Rail (Login Menu BGM) - Honkai_ Star Rail 1.0 OST.mp3" />
       </audio>
 
-      <img className="logo" src="/assets/img/hsr-logo.png" alt="" />
-      <img className="qr-code" src="/assets/img/qr-code.png" alt="" />
-      <a href="https://www.playstation.com/games/honkai-star-rail">
-        <img className="ps5" src="/assets/img/ps5.png" alt="" />
-      </a>
-      <a href="https://apps.apple.com/us/app/honkai-star-rail/id1599719154">
-        <img className="app-store" src="/assets/img/app-store.png" alt="" />
-      </a>
-      <a href="https://sg-public-api.hoyoverse.com/event/download_porter/trace/hkrpg_global/oswebpc/default?url=https%3A%2F%2Fhsr.hoyoverse.com%2Fen-us%2Fhome">
-        <img className="windows" src="/assets/img/windows.png" alt="" />
-      </a>
-      <a href="https://play.google.com/store/apps/details?id=com.HoYoverse.hkrpgoversea">
-        <img className="google-play" src="/assets/img/google-play.png" alt="" />
-      </a>
-      <a href="https://store.epicgames.com/en-US/p/honkai-star-rail">
-        <img className="epic-store" src="/assets/img/epic-store.png" alt="" />
-      </a>
+      <img className="logo" src="/assets/img/hsr-logo.png" alt="Honkai: Star Rail" />
+      <img
+        className="qr-code"
+        src="/assets/img/qr-code.png"
+        alt="QR code linking to the game download page"
+      />
+
+      <div className="platform-ctas">
+        {PLATFORMS.map((p) => (
+          <a key={p.name} href={p.href} className={`platform-cta ${p.className}`}>
+            <img src={p.img} alt={`Download Honkai: Star Rail on ${p.name}`} />
+          </a>
+        ))}
+      </div>
 
       <div id="toggleBtn" className="button-ctr">
         <div className="container">
@@ -82,6 +152,7 @@ export default function Hero() {
               type="checkbox"
               checked={playing}
               onChange={toggleVideo}
+              aria-label={playing ? "Pause hero video" : "Play hero video"}
             />
             <div className="play-icon"></div>
             <div className="pause-icon"></div>
@@ -90,7 +161,13 @@ export default function Hero() {
       </div>
 
       <div className="volume-share">
-        <div className="left-pg" onClick={toggleSound}>
+        <button
+          type="button"
+          className="left-pg"
+          onClick={toggleSound}
+          aria-pressed={soundOn}
+          aria-label={soundOn ? "Mute soundtrack" : "Play soundtrack"}
+        >
           <img
             className="on"
             src="/assets/img/volume-on.png"
@@ -103,10 +180,17 @@ export default function Hero() {
             alt=""
             style={{ display: soundOn ? "none" : "block" }}
           />
-        </div>
-        <div className="right-pg">
+        </button>
+        <button
+          type="button"
+          className="right-pg"
+          onClick={() => {
+            void navigator.clipboard?.writeText(window.location.href).catch(() => {});
+          }}
+          aria-label="Copy page link to share"
+        >
           <img src="/assets/img/share.png" alt="" />
-        </div>
+        </button>
       </div>
     </section>
   );
