@@ -29,17 +29,23 @@ Reproduces a AAA-game storefront hero: a muted MP4 fills the screen, platform CT
 
 ## Tech stack
 
-React 19 · TypeScript · Vite · View Transitions API — zero animation libraries (71 KB gzip JS total)
+React 19 · TypeScript · Vite — zero animation libraries (72 KB gzip JS total)
 
 ## Features
 
 - **Poster-first video hero** — a 160 KB poster frame renders instantly; the 12.6 MB MP4 only autoplays on desktop-class viewports. On mobile the hero is a composed still (a 390 px phone should not download a trailer by default)
 - **Intersection-aware playback** — an IntersectionObserver pauses the video when the hero scrolls offscreen and resumes it when you come back (only if you had it playing)
-- **Interactive character dossier** — five characters (Kafka, Blade, Dan Heng, Black Swan, Argenti) with element/path data; opening a file morphs the card into the detail panel via the View Transitions API, with a graceful no-transition fallback
-- **Keyboard-first dossier** — arrow keys move between characters, Enter opens, Esc closes and returns focus; the soundtrack and share controls are real buttons with `aria-pressed` / `aria-label`
+- **Stable character stage** — "Board the Astral Express" is a fixed-aspect stage that exists from first paint: selecting a character only changes what is inside it, so nothing on the page ever shifts or jumps. The stage portrait uses a transparent-background cutout (classical flood-fill keying, no AI) with a per-character focal point so every face is framed correctly
+- **Interactive character dossier** — five characters (Kafka, Blade, Dan Heng, Black Swan, Argenti) with element/path badges; the selected character cross-fades onto the stage (transform/opacity only)
+- **Keyboard-first roster** — the roster is a listbox with roving tabindex: arrow keys move between characters, Home/End jump, focus follows selection and the stage updates live; the soundtrack, share and theme controls are real buttons with `aria-pressed` / `aria-label`
+- **Dark & light themes** — system default with a persisted toggle and no first-paint flash (`color-scheme` set before render); the light theme is a designed warm "starlight paper", not an inverted dark
 - **Soundtrack toggle** that persists its muted/unmuted state in `localStorage`
 - **Platform CTA polish** — semantic anchors with alt text, focus-visible rings, hover lift and press-scale, laid out responsively instead of at hardcoded pixel positions
 - **Reduced motion honored** — `prefers-reduced-motion` disables all transitions, skips autoplay and view transitions; the static page is the complete page
+
+## Fan content
+
+Unofficial, non-commercial fan project — not affiliated with or endorsed by HoYoverse/Cognosphere. Imagery is game art processed for presentation only (crops, cut-outs) under the [Honkai: Star Rail Fan Creations Guide](https://hsr.hoyoverse.com/en-us/news/111203); all rights belong to their owners. No official site code or assets are hotlinked; everything is served from this repository.
 
 ## Run locally
 

@@ -71,7 +71,7 @@ function Badge({ label, color }: { label: string; color?: string }) {
 
 export default function Characters() {
   const [active, setActive] = useState(0);
-  const btnRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const btnRefs = useRef<(HTMLLIElement | null)[]>([]);
 
   const select = useCallback(
     (i: number, focus = false) => {
@@ -129,26 +129,24 @@ export default function Characters() {
 
       <ul className="char-roster" role="listbox" aria-label="Character roster">
         {CHARACTERS.map((ch, i) => (
-          <li key={ch.name} role="presentation">
-            <button
-              type="button"
-              ref={(el) => {
-                btnRefs.current[i] = el;
-              }}
-              role="option"
-              className="char-option"
-              aria-selected={i === active}
-              tabIndex={i === active ? 0 : -1}
-              onClick={() => select(i)}
-              onKeyDown={(e) => onRosterKey(e, i)}
-            >
-              <img src={ch.thumb} alt="" loading="lazy" decoding="async" width={120} height={160} />
-              <span className="char-option-name">{ch.name}</span>
-              <span className="char-option-role" aria-hidden="true">
-                {ch.element} · {ch.path}
-              </span>
-              <span className="visually-hidden">{`, ${ch.element}, path of ${ch.path}`}</span>
-            </button>
+          <li
+            key={ch.name}
+            role="option"
+            aria-selected={i === active}
+            tabIndex={i === active ? 0 : -1}
+            ref={(el) => {
+              btnRefs.current[i] = el as HTMLLIElement | null;
+            }}
+            onKeyDown={(e) => onRosterKey(e, i)}
+            onClick={() => select(i)}
+            className="char-option"
+          >
+            <img src={ch.thumb} alt="" loading="lazy" decoding="async" width={120} height={160} />
+            <span className="char-option-name">{ch.name}</span>
+            <span className="char-option-role" aria-hidden="true">
+              {ch.element} · {ch.path}
+            </span>
+            <span className="visually-hidden">{`, ${ch.element}, path of ${ch.path}`}</span>
           </li>
         ))}
       </ul>
