@@ -1,12 +1,21 @@
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 interface Character {
   name: string;
   epithet: string;
   element: string;
   path: string;
-  img: string;
+  /** Opaque focal-point crop used for the roster thumbnail. */
+  thumb: string;
+  /** Transparent cutout used on the stable stage. */
+  stage: string;
 }
+
+const ELEMENT_COLORS: Record<string, string> = {
+  Lightning: "#e8c15a",
+  Wind: "#7fd4b2",
+  Physical: "#e8e3d8",
+};
 
 const CHARACTERS: Character[] = [
   {
@@ -14,138 +23,135 @@ const CHARACTERS: Character[] = [
     epithet: "A wanted member of the Stellaron Hunters, veiled in whispers.",
     element: "Lightning",
     path: "Nihility",
-    img: "/assets/img/Kafka.jpeg",
+    thumb: "/assets/img/characters/kafka-card.webp",
+    stage: "/assets/img/characters/kafka-stage.webp",
   },
   {
     name: "Blade",
     epithet: "A swordsman who discards his life to master the blade.",
     element: "Wind",
     path: "Destruction",
-    img: "/assets/img/Blade.jpeg",
+    thumb: "/assets/img/characters/blade-card.webp",
+    stage: "/assets/img/characters/blade-stage.webp",
   },
   {
     name: "Dan Heng",
     epithet: "The cold and reserved guard of the Astral Express archives.",
     element: "Wind",
     path: "The Hunt",
-    img: "/assets/img/Dan Heng.png",
+    thumb: "/assets/img/characters/dan-heng-card.webp",
+    stage: "/assets/img/characters/dan-heng-stage.webp",
   },
   {
     name: "Black Swan",
     epithet: "A Memokeeper of the Garden of Recollection, reading memories like silk.",
     element: "Wind",
     path: "Nihility",
-    img: "/assets/img/black swan.png",
+    thumb: "/assets/img/characters/black-swan-card.webp",
+    stage: "/assets/img/characters/black-swan-stage.webp",
   },
   {
     name: "Argenti",
     epithet: "A wandering knight devoted to the beauty of the goddess Idrila.",
     element: "Physical",
     path: "Erudition",
-    img: "/assets/img/argenti.png",
+    thumb: "/assets/img/characters/argenti-card.webp",
+    stage: "/assets/img/characters/argenti-stage.webp",
   },
 ];
 
+function Badge({ label, color }: { label: string; color?: string }) {
+  return (
+    <span className="badge">
+      {color && <span className="badge-dot" style={{ backgroundColor: color }} aria-hidden="true" />}
+      {label}
+    </span>
+  );
+}
+
 export default function Characters() {
-  const [selected, setSelected] = useState<number | null>(null);
-  const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [active, setActive] = useState(0);
+  const btnRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  const open = (i: number) => {
-    const run = () => setSelected(i);
-    // View Transitions API (Baseline 2025): shared-element morph when supported.
-    if (document.startViewTransition && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      document.startViewTransition(run);
-    } else {
-      run();
-    }
-  };
+  const select = useCallback(
+    (i: number, focus = false) => {
+      setActive(i);
+      if (focus) btnRefs.current[i]?.focus();
+    },
+    [],
+  );
 
-  const close = () => {
-    const card = selected !== null ? cardRefs.current[selected] : null;
-    setSelected(null);
-    card?.focus();
-  };
-
-  const onCardKey = (e: React.KeyboardEvent, i: number) => {
+  const onRosterKey = (e: React.KeyboardEvent, i: number) => {
     const last = CHARACTERS.length - 1;
     let next: number | null = null;
     if (e.key === "ArrowRight" || e.key === "ArrowDown") next = i === last ? 0 : i + 1;
-    if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = i === 0 ? last : i - 1;
-    if (e.key === "Escape") {
-      close();
-      return;
-    }
+    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = i === 0 ? last : i - 1;
+    else if (e.key === "Home") next = 0;
+    else if (e.key === "End") next = last;
     if (next !== null) {
       e.preventDefault();
-      cardRefs.current[next]?.focus();
-      open(next);
+      select(next, true);
     }
   };
 
-  const active = selected !== null ? CHARACTERS[selected] : null;
+  const c = CHARACTERS[active];
 
   return (
-    <section className="characters-section" aria-label="Characters">
-      <h2 className="characters-title">Board the Astral Express</h2>
-      <p className="characters-sub">Meet the trailblazers you will travel the stars with.</p>
+    <section className="characters-section" id="characters" aria-labelledby="characters-title">
+      <div className="characters-head">
+        <h2 className="characters-title" id="characters-title">
+          Board the Astral Express
+        </h2>
+        <p className="characters-sub">Choose a name from the roster — the stage follows.</p>
+      </div>
 
-      <ul className="character-grid">
-        {CHARACTERS.map((c, i) => (
-          <li key={c.name}>
+      {/* Stable stage: always mounted, fixed aspect — selection never shifts layout. */}
+      <div className="char-stage" role="group" aria-live="polite" aria-label={`${c.name} dossier`}>
+        <div className="char-stage-plate" aria-hidden="true" />
+        <img
+          key={c.name}
+          className="char-stage-img"
+          src={c.stage}
+          alt={`${c.name} portrait`}
+          decoding="async"
+          fetchPriority="high"
+        />
+        <div className="char-stage-info">
+          <p className="char-stage-kicker">{c.element} · Path of {c.path}</p>
+          <h3 className="char-stage-name">{c.name}</h3>
+          <p className="char-stage-epithet">{c.epithet}</p>
+          <div className="char-stage-badges">
+            <Badge label={c.element} color={ELEMENT_COLORS[c.element]} />
+            <Badge label={c.path} />
+          </div>
+        </div>
+      </div>
+
+      <ul className="char-roster" role="listbox" aria-label="Character roster">
+        {CHARACTERS.map((ch, i) => (
+          <li key={ch.name} role="presentation">
             <button
+              type="button"
               ref={(el) => {
-                cardRefs.current[i] = el;
+                btnRefs.current[i] = el;
               }}
-              className="character-card"
-              onClick={() => (selected === i ? close() : open(i))}
-              onKeyDown={(e) => onCardKey(e, i)}
-              aria-expanded={selected === i}
-              style={
-                selected === null || selected !== i
-                  ? { viewTransitionName: `character-${i}` }
-                  : undefined
-              }
+              role="option"
+              className="char-option"
+              aria-selected={i === active}
+              tabIndex={i === active ? 0 : -1}
+              onClick={() => select(i)}
+              onKeyDown={(e) => onRosterKey(e, i)}
             >
-              <img src={c.img} alt="" loading="lazy" decoding="async" />
-              <span className="character-name">{c.name}</span>
-              <span className="character-meta">
-                {c.element} · {c.path}
+              <img src={ch.thumb} alt="" loading="lazy" decoding="async" width={120} height={160} />
+              <span className="char-option-name">{ch.name}</span>
+              <span className="char-option-role" aria-hidden="true">
+                {ch.element} · {ch.path}
               </span>
+              <span className="visually-hidden">{`, ${ch.element}, path of ${ch.path}`}</span>
             </button>
           </li>
         ))}
       </ul>
-
-      {active && (
-        <div className="character-detail" role="group" aria-label={`${active.name} dossier`}>
-          <button type="button" className="dossier-close" onClick={close} aria-label="Close dossier">
-            ✕
-          </button>
-          <img
-            className="dossier-img"
-            src={active.img}
-            alt={`${active.name} portrait`}
-            style={{ viewTransitionName: `character-${selected}` }}
-          />
-          <div className="dossier-body">
-            <h3>{active.name}</h3>
-            <p className="dossier-epithet">{active.epithet}</p>
-            <dl className="dossier-data">
-              <div>
-                <dt>Element</dt>
-                <dd>{active.element}</dd>
-              </div>
-              <div>
-                <dt>Path</dt>
-                <dd>{active.path}</dd>
-              </div>
-            </dl>
-            <a className="dossier-cta" href="https://hsr.hoyoverse.com/en-us/character">
-              Full profile ↗
-            </a>
-          </div>
-        </div>
-      )}
     </section>
   );
 }
