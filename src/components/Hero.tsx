@@ -4,6 +4,42 @@ const prefersReducedMotion = () =>
   typeof window !== "undefined" &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+function ThemeToggle() {
+  const [theme, setTheme] = useState(() =>
+    document.documentElement.dataset.theme === "light" ? "light" : "dark",
+  );
+  const toggle = () => {
+    const next = theme === "light" ? "dark" : "light";
+    document.documentElement.dataset.theme = next;
+    try {
+      localStorage.setItem("theme", next);
+    } catch {
+      /* private mode: theme just won't persist */
+    }
+    setTheme(next);
+  };
+  return (
+    <button
+      type="button"
+      className="theme-toggle"
+      onClick={toggle}
+      aria-pressed={theme === "light"}
+      aria-label={theme === "light" ? "Switch to dark theme" : "Switch to light theme"}
+    >
+      {theme === "light" ? (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+          <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.8 6.8 0 0 0 9.8 9.8Z" strokeLinejoin="round" />
+        </svg>
+      ) : (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.2" />
+          <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.4 5.4l1.4 1.4M17.2 17.2l1.4 1.4M18.6 5.4l-1.4 1.4M6.8 17.2l-1.4 1.4" strokeLinecap="round" />
+        </svg>
+      )}
+    </button>
+  );
+}
+
 const PLATFORMS = [
   {
     name: "PlayStation 5",
@@ -191,6 +227,7 @@ export default function Hero() {
         >
           <img src="/assets/img/share.png" alt="" />
         </button>
+        <ThemeToggle />
       </div>
     </section>
   );

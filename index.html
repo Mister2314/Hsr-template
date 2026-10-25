@@ -8,6 +8,24 @@
       content="Honkai: Star Rail fan landing — video hero, character dossiers, soundtrack toggle and platform download links."
     />
     <title>Honkai: Star Rail — Board the Astral Express</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23141014'/%3E%3Cpath d='M16 5 6 20h7l-2 7 15-16h-8l3-6z' fill='%23ffd166'/%3E%3C/svg%3E"
+    />
+    <script>
+      // Theme before first paint: persisted choice, else system — no flash.
+      (function () {
+        try {
+          var t = localStorage.getItem("theme");
+          if (t !== "dark" && t !== "light") {
+            t = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+          }
+          document.documentElement.dataset.theme = t;
+        } catch (e) {
+          document.documentElement.dataset.theme = "dark";
+        }
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
